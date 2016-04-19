@@ -1,7 +1,7 @@
 # first line is all the 'rules' of the Makefile you want to run as a default
 
-analysis.zip: isles.dat abyss.dat last.dat
-	zip analysis.zip isles.dat abyss.dat last.dat
+analysis.zip: *.dat wordcount.py
+	zip $@ $^
 
 .PHONY : dats
 dats: isles.dat abyss.dat last.dat
@@ -11,20 +11,17 @@ dats: isles.dat abyss.dat last.dat
 # collectively called rule
 
 # count words
-isles.dat : books/isles.txt
-	python wordcount.py books/isles.txt isles.dat
+isles.dat : books/isles.txt wordcount.py
+	python wordcount.py $< $@
 
-abyss.dat : books/abyss.txt
-	python wordcount.py books/abyss.txt abyss.dat
+abyss.dat : books/abyss.txt wordcount.py
+	python wordcount.py $< $@
 
-last.dat: books/last.txt
-	python wordcount.py books/last.txt last.dat
+last.dat: books/last.txt wordcount.py
+	python wordcount.py $< $@
 	
 .PHONY : clean
 clean : 
-	rm -f *.dat *.zip
+	rm -f *.dat analysis.zip
 
 # zip up all dat files
-
-analysis.zip: isles.dat abyss.dat last.dat
-	zip analysis.zip isles.dat abyss.dat last.dat
