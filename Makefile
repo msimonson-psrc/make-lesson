@@ -1,6 +1,8 @@
 # first line is all the 'rules' of the Makefile you want to run as a default
 
-analysis.zip: *.dat wordcount.py
+COUNT_SCRIPT = wordcount.py
+
+analysis.zip: *.dat $(COUNT_SCRIPT)
 	zip $@ $^
 
 .PHONY : dats
@@ -11,14 +13,18 @@ dats: isles.dat abyss.dat last.dat
 # collectively called rule
 
 # count words
-isles.dat : books/isles.txt wordcount.py
-	python wordcount.py $< $@
+%.dat : books/%.txt $(COUNT_SCRIPT)
+	python wordcount.py $< $*.dat
 
-abyss.dat : books/abyss.txt wordcount.py
-	python wordcount.py $< $@
 
-last.dat: books/last.txt wordcount.py
-	python wordcount.py $< $@
+#isles.dat : books/isles.txt wordcount.py
+#	python wordcount.py $< $@
+
+#abyss.dat : books/abyss.txt wordcount.py
+#	python wordcount.py $< $@
+
+#last.dat: books/last.txt wordcount.py
+#	python wordcount.py $< $@
 	
 .PHONY : clean
 clean : 
