@@ -1,12 +1,21 @@
 # first line is all the 'rules' of the Makefile you want to run as a default
 
 COUNT_SCRIPT = wordcount.py
+#PLOT_SCRIPT = plotcount.py
+TXT_FILES = $(wildcard books/*.txt)
+DAT_FILES = $(patsubst books/%.txt, %.dat, $(TXT_FILES))
 
-analysis.zip: *.dat $(COUNT_SCRIPT)
+
+analysis.zip: $(DAT_FILES) $(COUNT_SCRIPT)
 	zip $@ $^
 
 .PHONY : dats
-dats: isles.dat abyss.dat last.dat
+dats: $(DAT_FILES)
+
+.PHONY : variables
+variables: 
+	@echo TXT_FILES: $(TXT_FILES)
+	@echo DAT_FILES: $(DAT_FILES)
 
 # target: dependencies
 #	action (MUST use a tab)
@@ -14,20 +23,10 @@ dats: isles.dat abyss.dat last.dat
 
 # count words
 %.dat : books/%.txt $(COUNT_SCRIPT)
-	python wordcount.py $< $*.dat
-
-
-#isles.dat : books/isles.txt wordcount.py
-#	python wordcount.py $< $@
-
-#abyss.dat : books/abyss.txt wordcount.py
-#	python wordcount.py $< $@
-
-#last.dat: books/last.txt wordcount.py
-#	python wordcount.py $< $@
+	python $(COUNT_SCRIPT) $< $*.dat
 	
 .PHONY : clean
 clean : 
-	rm -f *.dat analysis.zip
+	rm -f $(DAT_FILES) 
+	rm -f analysis.zip
 
-# zip up all dat files
